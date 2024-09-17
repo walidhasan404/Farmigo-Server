@@ -13,6 +13,11 @@ jspm_packages/
 dist/
 build/
 
+#Folder
+controllers/authController.ts
+middleware/authMiddleware.ts
+routes/authRoute.ts
+models/userModel.ts
 # TypeScript
 *.tsbuildinfo
 

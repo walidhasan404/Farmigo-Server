@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
+import connectDB from "./db/config";
 
 const app = express();
 const port = 3000;
@@ -8,8 +9,9 @@ const port = 3000;
 app.use(cors()); // Enable CORS
 app.use(express.json()); // Parse JSON request bodies
 
+connectDB();
 // Root Route
-app.get("/", (req: Request, res: Response) => {
+app.get("/", (_req: Request, res: Response) => {
   res.send("Hello, TypeScript with CORS, bcrypt, JWT, and Mongoose!");
 });
 
