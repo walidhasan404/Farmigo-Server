@@ -1,6 +1,11 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import User from "../models/userModel";
+import jwt from "jsonwebtoken";
+import { validationResult } from "express-validator";
+
+// JWT Secret
+const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 
 // Registration controller
 export const registerUser = async (req: Request, res: Response) => {
@@ -35,6 +40,47 @@ export const registerUser = async (req: Request, res: Response) => {
 
     // Respond with success
     res.status(201).json(userWithoutPassword);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// Login controller
+export const loginUser = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  // Validate request
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  try {
+    // Check if the user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    // Compare the password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    // Create a JWT payload
+    const payload = {
+      user: {
+        id: user._id,
+        role: user.role,
+      },
+    };
+
+    // Sign the JWT token
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
+
+    // Return the token in the response
+    res.status(200).json({ token });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
