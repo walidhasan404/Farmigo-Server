@@ -7,6 +7,8 @@ interface IUser extends Document {
   password: string;
   role: "admin" | "farmer" | "customer";
   profilePic?: string;
+  farmDescription?: string;
+  productsOffered?: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -37,6 +39,14 @@ const userSchema: Schema = new Schema({
   profilePic: {
     type: String,
     default: "",
+  },
+  farmDescription: {
+    type: String,
+    default: "",
+  },
+  productsOffered: {
+    type: [String],
+    default: [],
   },
   createdAt: {
     type: Date,

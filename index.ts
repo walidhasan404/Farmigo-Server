@@ -7,13 +7,13 @@ import connectDB from "./db/config";
 const app = express();
 const port = 3000;
 
-// connect to mongodb
-connectDB();
-
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
+
+// connect to mongodb
+connectDB();
 
 // All Routes
 app.use("/api/users", authRoutes);

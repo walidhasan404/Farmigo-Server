@@ -85,3 +85,33 @@ export const loginUser = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
+
+// Get user profile
+export const getUserProfile = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.id; // Assume user ID is attached to req object via authentication middleware
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// Update user profile
+export const updateUserProfile = async (req: Request, res: Response) => {
+  const userId = req.user?.id; // Assume user ID is attached to req object via authentication middleware
+  const updates = req.body; // Assume body contains fields to update
+
+  try {
+    const user = await User.findByIdAndUpdate(userId, updates, { new: true });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
