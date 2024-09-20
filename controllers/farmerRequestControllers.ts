@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
-import User from "../models/userModel";
+import User from "../test/userModel";
 
 interface User {
   id: string; 
+  role:string;
 }
 
 interface CustomRequest extends Request {
@@ -12,11 +13,14 @@ interface CustomRequest extends Request {
 // User sends request to become a farmer
 export const requestToJoinFarmer = async (req: CustomRequest, res: Response) => {
   const userId = req.user?.id; // Safely access id using optional chaining
-
+   console.log(userId);
+   const role = req.user?.role;
   if (!userId) {
     return res.status(401).json({ message: 'Unauthorized: User not found.' });
   }
-
+  if (role === 'admin') {
+    return res.status(401).json({ message: "Admin Can't Apply For Farmer" });
+  }
   try {
     const user = await User.findById(userId);
 
@@ -47,7 +51,7 @@ export const requestToJoinFarmer = async (req: CustomRequest, res: Response) => 
 
 
 // Admin gets all farmer join requests
-exports.getFarmerRequests = async (req:Request, res:Response) => {
+export const getFarmerRequests = async (_req:Request, res:Response) => {
   try {
     const requests = await User.find({ isFarmerRequestPending: true, role: 'customer' }).select('name email role');
 
@@ -60,11 +64,15 @@ exports.getFarmerRequests = async (req:Request, res:Response) => {
 
 
 // Admin approves farmer request
-exports.approveFarmerRequest = async (req:Request, res:Response) => {
-  const { id } = req.params;
+export const approveFarmerRequest = async (req:Request, res:Response) => {
+  console.log(req.params);
+  
+  const userId = req.params.id;
+  console.log(userId);
+  
 
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(userId);
 
     if (!user) {
       return res.status(404).json({ message: 'User not found.' });
@@ -89,7 +97,7 @@ exports.approveFarmerRequest = async (req:Request, res:Response) => {
 
 
 // Admin declines farmer request
-exports.declineFarmerRequest = async (req:Request, res:Response) => {
+export const declineFarmerRequest = async (req:Request, res:Response) => {
   const { id } = req.params;
 
   try {

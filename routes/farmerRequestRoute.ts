@@ -1,13 +1,21 @@
 // routes/authRoutes.ts
 import express from "express";
 import {
-    requestToJoinFarmer
+    approveFarmerRequest,
+    declineFarmerRequest,
+    getFarmerRequests,
+    requestToJoinFarmer, 
 } from "../controllers/farmerRequestControllers";
+import roleMiddleware from "../middleware/roleMiddleweare";
 
-const router = express.Router();
+const farmRequestRouter = express.Router();
 
 // join-farmer route
-router.post("/join-farmer", requestToJoinFarmer);
+farmRequestRouter.post("/join-farmer", requestToJoinFarmer);
+farmRequestRouter.get("/farmer/request",  roleMiddleware('admin'), getFarmerRequests);
+farmRequestRouter.put("/admin-request/approved/:id",roleMiddleware('admin'), approveFarmerRequest);
+farmRequestRouter.put("/admin/rquest/decliner/:id",roleMiddleware('admin'), declineFarmerRequest);
 
 
-export default router;
+
+export default farmRequestRouter;
