@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import User from "../test/userModel";
+
 
 interface User {
   id: string; 

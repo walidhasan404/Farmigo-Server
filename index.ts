@@ -1,9 +1,8 @@
-import { authMiddleware2 } from './test/authMiddleware';
+
 import express, { Request, Response } from "express";
 import cors from "cors";
 import connectDB from "./db/config";
 import cookieParser from 'cookie-parser';
-import authrRouter from "./test/authRoute";
 import farmRequestRouter from "./routes/farmerRequestRoute";
 import dotenv from 'dotenv'
 import categoryRouter from './routes/categoryRoutes';
