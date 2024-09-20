@@ -1,25 +1,51 @@
-// authMiddleware.ts
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
+const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 
-export const authMiddleware = (
-  req: Request,
+interface User {
+  id: string;
+  role: string;
+}
+
+interface DecodedToken {
+  user: User;
+}
+
+interface CustomRequest extends Request {
+  user?: User;
+}
+
+export const authMiddleware2 = (
+  req: CustomRequest,
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.header("Authorization")?.replace("Bearer ", "");
+  const token = req.cookies["auth-token"];
 
   if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({ message: "Unauthorized: No token provided" });
   }
 
   try {
-    const decoded: any = jwt.verify(token, JWT_SECRET);
+    ///console.log('sec', JWT_SECRET);
+
+    const decoded = jwt.verify(token, JWT_SECRET) as DecodedToken;
+
     req.user = decoded.user;
+    //  console.log(req.user);
+
     next();
   } catch (error) {
-    res.status(401).json({ message: "Unauthorized" });
+    if (error instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({ message: "Unauthorized: Token expired" });
+    } else if (error instanceof jwt.JsonWebTokenError) {
+      return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    } else {
+      console.error("Unexpected error:", error);
+      return res
+        .status(401)
+        .json({ message: "Unauthorized: Token verification failed" });
+    }
   }
 };

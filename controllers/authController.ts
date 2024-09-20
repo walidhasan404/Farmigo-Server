@@ -3,9 +3,20 @@ import bcrypt from "bcryptjs";
 import User from "../models/userModel";
 import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
+import formatProfileData from "../utils/formatProfileData";
+import getRandomImageUrl from "../utils/randomImageGenerator";
 
 // JWT Secret
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
+
+interface User {
+  role: string;
+  id: string;
+}
+
+interface CustomRequest extends Request {
+  user?: User;
+}
 
 // Registration controller
 export const registerUser = async (req: Request, res: Response) => {
@@ -27,6 +38,7 @@ export const registerUser = async (req: Request, res: Response) => {
       email,
       password: hashedPassword,
       role: role || "customer",
+      profilePic: getRandomImageUrl(),
     };
 
     // Create a new user
@@ -77,19 +89,24 @@ export const loginUser = async (req: Request, res: Response) => {
     };
 
     // Sign the JWT token
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
-
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "5d" });
+    //Set JWT in cookie
+    res.cookie("auth-token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 3600000,
+    });
     // Return the token in the response
-    res.status(200).json({ token });
+    res.status(200).json(formatProfileData(user));
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
 };
 
 // Get user profile
-export const getUserProfile = async (req: Request, res: Response) => {
+export const getUserProfile = async (req: CustomRequest, res: Response) => {
   try {
-    const userId = req.user?.id; // Assume user ID is attached to req object via authentication middleware
+    const userId = req.user?.id;
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -101,9 +118,9 @@ export const getUserProfile = async (req: Request, res: Response) => {
 };
 
 // Update user profile
-export const updateUserProfile = async (req: Request, res: Response) => {
-  const userId = req.user?.id; // Assume user ID is attached to req object via authentication middleware
-  const updates = req.body; // Assume body contains fields to update
+export const updateUserProfile = async (req: CustomRequest, res: Response) => {
+  const userId = req.user?.id;
+  const updates = req.body;
 
   try {
     const user = await User.findByIdAndUpdate(userId, updates, { new: true });

@@ -1,13 +1,23 @@
 import mongoose, { Schema, Document } from "mongoose";
 
+interface IAddress {
+  street?: string;
+  city?: string;
+  postal_code?: string;
+  house_number?: string;
+}
+
 // Define an interface for the User model
-interface IUser extends Document {
+export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
   role: "admin" | "farmer" | "customer";
   profilePic?: string;
-  farmDescription?: string;
+  address?: IAddress;
+  google_auth?: Boolean;
+  isFarmerRequestPending?: Boolean;
+  farmDescription?: string; // ? optional
   productsOffered?: string[];
   createdAt: Date;
   updatedAt: Date;
@@ -40,6 +50,21 @@ const userSchema: Schema = new Schema({
     type: String,
     default: "",
   },
+  address: {
+    street: { type: String, default: "" },
+    city: { type: String, default: "" },
+    postal_code: { type: String, default: "" },
+    house_number: { type: String, default: "" },
+    default: {},
+  },
+  google_auth: {
+    type: Boolean,
+    default: false,
+  },
+  isFarmerRequestPending: {
+    type: Boolean,
+    default: false,
+  },
   farmDescription: {
     type: String,
     default: "",
@@ -58,7 +83,7 @@ const userSchema: Schema = new Schema({
   },
 });
 
-// Automatically update `updatedAt` before saving
+// Automatically update updatedAt before saving
 userSchema.pre<IUser>("save", function (next) {
   this.updatedAt = new Date();
   next();
