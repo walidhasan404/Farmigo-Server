@@ -31,10 +31,10 @@ app.use(express.json()); // Parse JSON request bodies
 connectDB(); 
 
 // Root Route
-app.use('/api/v1', authrRouter)
+/* app.use('/api/v1', authrRouter)
 app.use('/api/v1', authMiddleware2, farmRequestRouter)
 app.use('/api/v1', authMiddleware2, categoryRouter)
-app.use('/api/v1', productsRouter)
+app.use('/api/v1', productsRouter) */
 
 
 

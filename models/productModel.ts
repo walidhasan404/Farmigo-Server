@@ -8,6 +8,7 @@ interface IProduct extends Document {
     price: number;
     quantity: number;
     images: string[];
+    featured?: boolean;
     created_at: Date;
 }
 
@@ -20,6 +21,10 @@ const productSchema = new Schema<IProduct>({
     price: { type: Number, required: true },
     quantity: { type: Number, default: 0 },
     images: [String],
+    featured: {
+        type: Boolean,
+        default: false
+    },
     created_at: { type: Date, default: Date.now }
 })
 
