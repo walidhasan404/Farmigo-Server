@@ -1,13 +1,14 @@
 // routes/authRoutes.ts
 import express from "express";
 import {
-  createProduct,
   getUserProfile,
   loginUser,
   registerUser,
   updateUserProfile,
 } from "../controllers/authController";
-import { authMiddleware2 } from "../middleware/authMiddleware";
+import { authMiddleware2, isAdmin } from "../middleware/authMiddleware";
+import { createProduct } from "../test/productCotroller";
+import { createBlog, getAllBlogs } from "../controllers/blogController";
 
 const router = express.Router();
 
@@ -22,5 +23,11 @@ router.put("/update/profile", authMiddleware2, updateUserProfile);
 
 // create product
 router.post("/product", authMiddleware2, createProduct);
+
+// create blog
+router.post("/blog", authMiddleware2, isAdmin, createBlog);
+
+// get all blogs data from database
+router.get("/blogs", authMiddleware2, getAllBlogs);
 
 export default router;

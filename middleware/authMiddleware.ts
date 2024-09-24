@@ -1,6 +1,15 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
+interface User {
+  role: string;
+  id: string;
+}
+
+interface CustomRequest extends Request {
+  user?: User;
+}
+
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 
 interface User {
@@ -47,5 +56,17 @@ export const authMiddleware2 = (
         .status(401)
         .json({ message: "Unauthorized: Token verification failed" });
     }
+  }
+};
+
+export const isAdmin = (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.user?.role === "admin") {
+    next();
+  } else {
+    return res.status(403).json({ success: false, message: "Access denied" });
   }
 };
