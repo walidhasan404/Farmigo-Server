@@ -103,6 +103,23 @@ export const loginUser = async (req: Request, res: Response) => {
   }
 };
 
+// logout
+export const logoutUser = async (req: Request, res: Response) => {
+  try {
+    // Clear the JWT token cookie
+    res.clearCookie("auth-token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+
+    // Respond with success
+    res.status(200).json({ success: true, message: "Logged out successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error", error });
+  }
+};
+
 // Get user profile
 export const getUserProfile = async (req: CustomRequest, res: Response) => {
   try {
