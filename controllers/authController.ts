@@ -149,28 +149,30 @@ export const updateUserProfile = async (req: CustomRequest, res: Response) => {
 
 export const googleAuth = async (req: Request, res: Response) => {
   try {
-    const { accessToken } = req.body;
+    const {access_token} = req.body;
+    //console.log(access_token);
+    
 
     // Verify the token using Firebase Admin SDK
-    const decodedUser = await getAuth().verifyIdToken(accessToken);
-    /* `const { name, email, picture } = decodedUser;` is a destructuring assignment in JavaScript. It
-    is extracting the `name`, `email`, and `picture` properties from the `decodedUser` object and
-    assigning them to variables with the same names. This allows you to access these properties
-    directly as variables within the function without having to use `decodedUser.name`,
-    `decodedUser.email`, and `decodedUser.picture`. */
+    const decodedUser = await getAuth().verifyIdToken(access_token);
     const { name, email, picture } = decodedUser;
 
     if (!email || !name || !picture) {
       return res.status(400).json({ error: "Invalid user data from Google." });
     }
 
-    let user = await User.findOne({ email }).select("name email google_auth");
+    let user = await User.findOne({ email }).select("name email google_auth profilePic");
 
     if (user) {
       if (!user.google_auth) {
         return res.status(403).json({
           error: "This email was signed up without Google. Please log in with a password to access the account.",
         });
+      } else {
+        // Login successful
+        console.log(user);
+        
+        return res.status(200).json({ message: "Login successful.", data: formatProfileData(user) });
       }
     } else {
       user = new User({
@@ -181,17 +183,9 @@ export const googleAuth = async (req: Request, res: Response) => {
       });
 
       await user.save();
-      res.status(201).json({ message: "User created successfully." });
+      // New user created
+      return res.status(201).json({ message: "User created successfully.", data: formatProfileData(user) });
     }
-
-    // Set the accessToken in a cookie
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,  // Prevents client-side access to the cookie
-      secure: process.env.NODE_ENV === 'production', // Use HTTPS in production
-      maxAge: 24 * 60 * 60 * 1000, // 1 day expiration
-    });
-
-    return res.status(200).json({ message: "Login successful.", user });
   } catch (err) {
     console.error("Google Auth Error:", err);
     return res.status(500).json({
@@ -199,6 +193,7 @@ export const googleAuth = async (req: Request, res: Response) => {
     });
   }
 };
+
 
 
 // Logout route

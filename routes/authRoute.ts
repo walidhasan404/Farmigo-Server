@@ -2,6 +2,7 @@
 import express from "express";
 import {
   getUserProfile,
+  googleAuth,
   logOut,
   loginUser,
   registerUser,
@@ -14,6 +15,7 @@ const authrRouter = express.Router();
 authrRouter.post("/register", registerUser);
 authrRouter.post("/login", loginUser);
 authrRouter.get("/logout", logOut);
+authrRouter.post("/google-auth", googleAuth);
 
 
 // Get user profile

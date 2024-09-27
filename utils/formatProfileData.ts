@@ -8,7 +8,7 @@ interface ProfileData {
 
 const formatProfileData = (user: IUser): ProfileData => {
   return {
-    profile_img: user.profilePic || "",
+    profile_img: user.profilePic ?? '',
     name: user.name,
     email: user.email,
   };
