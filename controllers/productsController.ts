@@ -1,9 +1,20 @@
 import { Request, Response } from 'express';
 import Product from '../models/productModel'; // Assuming the Product model is located in the models directory
+import { log } from 'console';
 
-export const createProduct = async (req: Request, res: Response) => {
+interface User {
+  id: string;
+}
+
+interface CustomRequest extends Request {
+  user?: User;
+}
+
+export const createProduct = async (req: CustomRequest, res: Response) => {
   try {
-    const { name, description, price, quantity, category, images, user_Id , rating} = req.body;
+    const user_Id = req.user?.id;
+    log(user_Id)
+    const { name, description, price, quantity, category, images, rating} = req.body;
 
     // Validate the request body
     if (!name || !price || !category || !user_Id ) {

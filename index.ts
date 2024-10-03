@@ -17,7 +17,7 @@ const port = 3000;
 // Middleware  // Enable 
 // CORS options
 const corsOptions = {
-  origin: ['http://localhost:5173', 'https://farmigo.com'], // Allow multiple origins
+  origin: ['http://localhost:5173', 'https://farmigo-8d2d8.web.app', 'https://farmigo-8d2d8.firebaseapp.com'], // Allow multiple origins
   credentials: true, // Allow cookies or credentials to be sent
   optionsSuccessStatus: 200 // For legacy browser support
 };

@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import User from "../models/userModel";
-import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 import admin from 'firebase-admin'
 import {getAuth} from 'firebase-admin/auth'
-import serviceAccountKey from "../farmigo-auth-firebase-adminsdk-29tc8-518968d738.json"
+import serviceAccountKey from "../farmigo-8d2d8-firebase-adminsdk-e18qj-2f78b4b18f.json"
 import getRandomImageUrl from "../utils/randomImageGenerator";
 import formatProfileData from "../utils/formatProfileData";
 
@@ -16,8 +15,6 @@ admin.initializeApp({
 
 
 
-// JWT Secret
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 
 //console.log(JWT_SECRET);
 
@@ -92,22 +89,6 @@ export const loginUser = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // Create a JWT payload
-    const payload = {
-      user: {
-        id: user._id,
-        role: user.role,
-      },
-    };
-
-    // Sign the JWT token
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "5d" });
-    //Set JWT in cookie
-    res.cookie("auth-token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 3600000,
-    });
     // Return the token in the response
     res.status(200).json(formatProfileData(user));
   } catch (error) {
@@ -170,9 +151,8 @@ export const googleAuth = async (req: Request, res: Response) => {
         });
       } else {
         // Login successful
-        console.log(user);
-        
-        return res.status(200).json({ message: "Login successful.", data: formatProfileData(user) });
+        //console.log(user);
+        return res.status(200).json(formatProfileData(user));
       }
     } else {
       user = new User({
@@ -184,7 +164,7 @@ export const googleAuth = async (req: Request, res: Response) => {
 
       await user.save();
       // New user created
-      return res.status(201).json({ message: "User created successfully.", data: formatProfileData(user) });
+      return res.status(201).json(formatProfileData(user));
     }
   } catch (err) {
     console.error("Google Auth Error:", err);
@@ -198,6 +178,6 @@ export const googleAuth = async (req: Request, res: Response) => {
 
 // Logout route
 export const logOut =  async(_req: Request, res: Response) => {
-  res.clearCookie('auth-token');
+  res.header('auth_token', '')
   res.json({ msg: 'Logged out successfully' });
 };
