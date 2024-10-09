@@ -1,7 +1,7 @@
 
 # Farmigo Server
 
-Farmigo is a RESTful API built to manage products, blogs, and user authentication for a farming e-commerce application. This API allows users to register, log in, view products, and access blogs. Admin users can add new products to the platform.
+Farmigo is a RESTful API built to manage products, blogs, and user authentication for a farming e-commerce application. This API allows users to register, log in, view products, and access blogs. Admin users can add new products to the platform..
 
 ## Table of Contents
 
