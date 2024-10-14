@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/socket.io": "^3.0.2",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -19,7 +20,8 @@
     "express-validator": "^7.2.0",
     "firebase-admin": "^12.5.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.6.2"
+    "mongoose": "^8.6.2",
+    "socket.io": "^4.8.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

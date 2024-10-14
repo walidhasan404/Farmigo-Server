@@ -104,13 +104,13 @@ export const getProducts = async (req: Request, res: Response) => {
 
     // Pagination logic
     const limit = 10; // Limit products per page
-    const skip = (Number(page) - 1) * limit;
+  //  const skip = (Number(page) - 1) * limit;
 
     // Fetch products with filters, sorting, and pagination
     const products = await Product.find(filter)
       .sort(sortOption)
-      .skip(skip)
-      .limit(limit);
+     
+
 
     // Get total count for pagination
     const totalProducts = await Product.countDocuments(filter);
