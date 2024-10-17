@@ -3,12 +3,20 @@ import cors from "cors";
 import authRoutes from "./routes/authRoute";
 import cookieParser from "cookie-parser";
 import connectDB from "./db/config";
+import orderRoutes from './routes/orderRoutes'
 
 const app = express();
 const port = 3000;
 
 // Middleware
-app.use(cors());
+
+const corsOptions = {
+  origin: 'http://localhost:5173', // Frontend origin
+  credentials: true, // Allow sending credentials (cookies, authorization headers)
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -17,6 +25,7 @@ connectDB();
 
 // All Routes
 app.use("/api/users", authRoutes);
+app.use('/api/order', orderRoutes)
 
 // Root Route
 app.get("/", (req: Request, res: Response) => {
