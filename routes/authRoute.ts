@@ -23,6 +23,6 @@ authrRouter.post("/google-auth", googleAuth);
 authrRouter.get("/profile",authMiddleware2, getUserProfile);
 
 // Update user profile
-authrRouter.put("/profile",authMiddleware2, updateUserProfile); 
+authrRouter.put("/profile-update", authMiddleware2, updateUserProfile); 
 
 export default authrRouter;

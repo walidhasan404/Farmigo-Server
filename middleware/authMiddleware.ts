@@ -32,7 +32,7 @@ export const authMiddleware2 = (
   next: NextFunction
 ) => {
   const token = req.header("auth-token");
-  log(token);
+  log(token, 'auth token');
   if (!token) {
     return res.status(401).json({ message: "Unauthorized: No token provided" });
   }

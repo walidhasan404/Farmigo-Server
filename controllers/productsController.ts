@@ -13,11 +13,11 @@ interface CustomRequest extends Request {
 export const createProduct = async (req: CustomRequest, res: Response) => {
   try {
     const user_Id = req.user?.id;
-    log(user_Id)
-    const { name, description, price, quantity, category, images, rating} = req.body;
+     console.log(user_Id, "products")
+    const { product_name, description, price, quantity, category, images, rating} = req.body;
 
     // Validate the request body
-    if (!name || !price || !category || !user_Id ) {
+    if (!product_name || !price || !category || !user_Id ) {
       return res.status(400).json({
         success: false,
         message: 'Please provide all required fields: name, price, category, farmer_Id, and at least one image.'
@@ -27,7 +27,7 @@ export const createProduct = async (req: CustomRequest, res: Response) => {
     // Create the product
     const newProduct = new Product({
       farmer_id: user_Id,
-      product_name: name,
+      product_name,
       description,
       category,
       price,
@@ -167,3 +167,52 @@ export const getSingleProduct = async(req:Request, res:Response)=>{
 
  
 }
+
+
+// get products By farmer id
+
+
+export const getProductsByFarmerId = async (req: Request, res: Response) => {
+  const { id } = req.params; // id is the farmer's ID
+
+  console.log("Farmer ID:", id); // Only for debugging, remove in production
+  
+  try {
+      const products = await Product.find({ farmer_id: id });
+      console.log('====================================');
+      console.log(products);
+      console.log('====================================');
+      if (!products || products.length === 0) {
+          return res.status(404).json({ message: 'No products found for this farmer.' });
+      }
+
+      return res.status(200).json(products);
+  } catch (error) {
+      return res.status(500).json({
+        message: 'Error fetching products',
+        error: (error as Error).message
+      });
+  }
+};
+
+
+//get orders by farmer id
+
+/* export const getOrdersByFarmerId = async (req: Request, res: Response) => {
+  const { farmerId } = req.params;
+
+  try {
+      const orders = await Order.find({ farmer_id: farmerId });
+      
+      if (!orders || orders.length === 0) {
+          return res.status(404).json({ message: 'No orders found for this farmer.' });
+      }
+
+      return res.status(200).json(orders);
+  } catch (error) {
+      return res.status(500).json({
+        message: 'Error fetching orders',
+        error: (error as Error).message
+      });
+  }
+}; */

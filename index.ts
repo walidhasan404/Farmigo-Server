@@ -9,8 +9,9 @@ import categoryRouter from './routes/categoryRoutes';
 import productsRouter from './routes/productsRoutes';
 import { Server, Socket } from 'socket.io';
 import http from 'http';
-import Chat from './models/chatModel';
 import { log } from "console";
+import blogRouter from "./routes/blogRoutes";
+import orderRouter from "./routes/orderRoutes";
 dotenv.config();
 
 const app = express();
@@ -27,7 +28,7 @@ const corsOptions = {
 
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173', // Match the origin to the frontend
+    origin: ['http://localhost:5173', 'https://farmigo-8d2d8.web.app', 'https://farmigo-8d2d8.firebaseapp.com'], // Match the origin to the frontend
     methods: ['GET', 'POST'],
   },
 });
@@ -44,6 +45,8 @@ app.use('/api/v1', authrRouter);
 app.use('/api/v1', farmRequestRouter);
 app.use('/api/v1', categoryRouter);
 app.use('/api/v1', productsRouter);
+app.use('/api/v1', blogRouter)
+app.use('/api/order', orderRouter)
 
 // Real-time chat handling
 io.on('connection', (socket: Socket) => {
