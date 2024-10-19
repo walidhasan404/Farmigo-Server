@@ -57,6 +57,8 @@ export const registerUser = async (req: Request, res: Response) => {
   }
 };
 
+
+
 // Login controller
 export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -130,5 +132,24 @@ export const updateUserProfile = async (req: CustomRequest, res: Response) => {
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// userCount
+export const getUserCount = async (req:Request, res:Response) => {
+  try {
+      const count = await User.countDocuments();
+      res.status(200).json({ userCount: count });
+  } catch (error) {
+      res.status(500).json({ message: 'Error fetching user count', error });
+  }
+};
+
+export const getAllUsers = async (req:Request, res:Response) => {
+  try {
+      const users = await User.find().select('name profilePic email role');
+      res.status(200).json(users);
+  } catch (error) {
+      res.status(500).json({ message: 'Error fetching users', error });
   }
 };

@@ -63,3 +63,42 @@ export const getAllBlogs = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const updateBlog = async (req: CustomRequest, res: Response) => {
+  try {
+    const { title, content, categories } = req.body;
+
+    const categoryDocs = await Category.find({
+      category_name: { $in: categories },
+    });
+
+    if (categoryDocs.length !== categories.length) {
+      return res.status(400).json({
+        success: false,
+        message: "One or more categories are invalid.",
+      });
+    }
+
+    const categoryIds = categoryDocs.map((category) => category._id);
+
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      req.params.id,
+      { title, content, categories: categoryIds },
+      { new: true }
+    );
+
+    return res.status(200).json({ success: true, data: updatedBlog });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "Server Error", error });
+  }
+};
+
+export const deleteBlog = async (req: CustomRequest, res: Response) => {
+  try {
+    await Blog.findByIdAndDelete(req.params.id);
+    return res.status(204).json({ success: true, message: "Blog deleted successfully." });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "Server Error", error });
+  }
+};
+
