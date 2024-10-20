@@ -6,6 +6,7 @@ interface IOrderItem {
 }
 
 interface IOrder extends Document {
+  order_no: string;
   email: string;
   country: string;
   firstName: string;
@@ -34,6 +35,7 @@ const OrderItemSchema: Schema = new Schema({
 
 const OrderSchema: Schema = new Schema(
   {
+    order_no:{type: String,},
     email: { type: String, },
     country: { type: String, },
     firstName: { type: String, },

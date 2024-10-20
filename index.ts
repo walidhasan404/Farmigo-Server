@@ -12,6 +12,7 @@ import http from 'http';
 import { log } from "console";
 import blogRouter from "./routes/blogRoutes";
 import orderRouter from "./routes/orderRoutes";
+import reviewRouter from "./routes/reviewRoutes";
 dotenv.config();
 
 const app = express();
@@ -46,7 +47,10 @@ app.use('/api/v1', farmRequestRouter);
 app.use('/api/v1', categoryRouter);
 app.use('/api/v1', productsRouter);
 app.use('/api/v1', blogRouter)
-app.use('/api/order', orderRouter)
+app.use('/api/v1/order', orderRouter)
+app.use('/api/v1/review', reviewRouter)
+
+
 
 // Real-time chat handling
 io.on('connection', (socket: Socket) => {

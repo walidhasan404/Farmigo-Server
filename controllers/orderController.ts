@@ -4,6 +4,21 @@ import Order from "../models/orderModel";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
+
+function orderNoGenerator(): string {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+  const length = 5; // Define the desired length of the order number
+  let orderNo = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    orderNo += characters[randomIndex];
+  }
+
+  return orderNo;
+}
+
+
 export const createPaymentIntent = async (req: Request, res: Response) => {
   const { price } = req.body;
 
@@ -107,6 +122,7 @@ export const newCollection = async (req: Request, res: Response) => {
 
   try {
     const newOrder = new Order({
+      order_no: orderNoGenerator(),
       email,
       country,
       firstName,
