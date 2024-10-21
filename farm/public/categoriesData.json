@@ -1,0 +1,8 @@
+[
+  { "name": "Fruits", "image": "./fruits.jpg" },
+  { "name": "Vegetables", "image": "./vagetables.jpg" },
+  { "name": "Dairy & Meats", "image": "./meat.jpg" },
+  { "name": "Poultry", "image": "./poultry.jpg" },
+  { "name": "Honey & Jam", "image": "./honey.jpg" },
+  { "name": "Dairy & Milk", "image": "./milk.jpg" }
+]
