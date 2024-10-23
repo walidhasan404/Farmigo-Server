@@ -30,6 +30,7 @@ export const createReview = async (req: Request, res: Response) => {
 export const getReviewsByProductId = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
+    log(productId)
     const reviews = await Review.find({ product_id: productId });
     res.status(200).json(reviews);
   } catch (error) {
@@ -62,7 +63,15 @@ export const getReviewsForFarmer = async (req: Request, res: Response) => {
 // Get all reviews for admin (all reviews)
 export const getAllReviewsForAdmin = async (req: Request, res: Response) => {
   try {
-    const reviews = await Review.find();
+    const reviews = await Review.find()
+      .populate({
+        path: 'product_id',
+        select: 'product_name images', // Select only the product_name field from the Product model
+      })
+      .populate({
+        path: 'farmer_id',
+        select: 'name', // Select only the user_name field from the User model
+      });
     res.status(200).json(reviews);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching reviews', error });

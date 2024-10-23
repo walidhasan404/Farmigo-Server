@@ -8,6 +8,8 @@ import {
   updateReviewStatus,
   deleteReview
 } from '../controllers/reviewController';
+import roleMiddleware from '../middleware/roleMiddleweare';
+import { authMiddleware2 } from '../middleware/authMiddleware';
 
 const reviewRouter = express.Router();
 
@@ -24,7 +26,7 @@ reviewRouter.get('/customer/:customerId', getReviewsByCustomerId);
 reviewRouter.get('/farmer/:farmerId', getReviewsForFarmer);
 
 // Get all reviews for admin
-reviewRouter.get('/admin/all', getAllReviewsForAdmin);
+reviewRouter.get('/admin/all',authMiddleware2, roleMiddleware('admin'), getAllReviewsForAdmin);
 
 // Approve or reject a review (admin only)
 reviewRouter.patch('/admin/review/:reviewId/status', updateReviewStatus);

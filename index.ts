@@ -1,7 +1,6 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import connectDB from "./db/config";
-import cookieParser from 'cookie-parser';
 import authrRouter from "./routes/authRoute";
 import farmRequestRouter from "./routes/farmerRequestRoute";
 import dotenv from 'dotenv';
@@ -36,7 +35,6 @@ const io = new Server(server, {
 
 // Use CORS with options
 app.use(cors(corsOptions));
-app.use(cookieParser());
 app.use(express.json()); // Parse JSON request bodies
 
 connectDB(); 

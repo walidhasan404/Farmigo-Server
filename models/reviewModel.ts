@@ -18,7 +18,7 @@ interface IReview extends Document {
 const reviewSchema = new Schema<IReview>({
   customer_id: {
     type: Schema.Types.ObjectId,
-    ref: 'Customer',
+    ref: 'User',
     required: true
   },
   customer_name: {
@@ -27,7 +27,7 @@ const reviewSchema = new Schema<IReview>({
   },
   farmer_id: {
     type: Schema.Types.ObjectId,
-    ref: 'Farmer',
+    ref: 'User',
     required: true
   },
   product_id: {
