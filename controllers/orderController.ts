@@ -7,6 +7,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 export const createPaymentIntent = async (req: Request, res: Response) => {
   const { price } = req.body;
 
+  console.log(price);
+  
+
   // console.log("Creating payment intent with price:", req.body);
 
   try {
@@ -16,7 +19,7 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
       payment_method_types: ["card"],
     });
 
-    // console.log("Payment Intent created:", paymentIntent);
+    console.log("Payment Intent created:", paymentIntent);
 
     res.send({
       clientSecret: paymentIntent.client_secret,
