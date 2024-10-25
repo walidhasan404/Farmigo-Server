@@ -7,7 +7,7 @@ import {
   updateUserProfile,
 } from "../controllers/authController";
 import { authMiddleware2, isAdmin } from "../middleware/authMiddleware";
-import { createProduct } from "../test/productCotroller";
+// import { createProduct } from "../test/productCotroller";
 import { createBlog, getAllBlogs } from "../controllers/blogController";
 
 const router = express.Router();
@@ -22,7 +22,7 @@ router.get("/profile", authMiddleware2, getUserProfile);
 router.put("/update/profile", authMiddleware2, updateUserProfile);
 
 // create product
-router.post("/product", authMiddleware2, createProduct);
+// router.post("/product", authMiddleware2, createProduct);
 
 // create blog
 router.post("/blog", authMiddleware2, isAdmin, createBlog);
